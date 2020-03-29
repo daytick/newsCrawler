@@ -35,3 +35,6 @@ target/
 .project
 .settings/
 bin/
+
+# data
+mysql-data
