@@ -52,18 +52,17 @@ public class MybatisCrawlerDao implements CrawlerDao {
 
     @Override
     public void insertProcessedLink(String link) throws SQLException {
-        Map<String, String> param = new HashMap<>();
-        param.put("tableName", "links_already_processed");
-        param.put("link", link);
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            session.insert("top.daytick.myMapper.insertLink", param);
-        }
+        insertLink(link, "links_already_processed");
     }
 
     @Override
     public void insertToBeProcessedLink(String link) throws SQLException {
+        insertLink(link, "links_to_be_processed");
+    }
+
+    private void insertLink(String link, String tableName) {
         Map<String, String> param = new HashMap<>();
-        param.put("tableName", "links_to_be_processed");
+        param.put("tableName", tableName);
         param.put("link", link);
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             session.insert("top.daytick.myMapper.insertLink", param);
