@@ -38,3 +38,6 @@ bin/
 
 # data
 mysql-data
+
+# Mac
+.DS_Store

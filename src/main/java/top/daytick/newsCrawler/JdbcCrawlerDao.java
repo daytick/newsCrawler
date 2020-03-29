@@ -21,13 +21,13 @@ public class JdbcCrawlerDao implements CrawlerDao {
     public String getNextLinkThenDelete() throws SQLException {
         String link = getNextLink();
         if (link != null) {
-            updateDatabase(link, "DELETE FROM links_to_be_processed WHERE link = ?");
+            insertProcessedLink(link);
         }
 
         return link;
     }
 
-    public String getNextLink() throws SQLException {
+    private String getNextLink() throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT link FROM links_to_be_processed LIMIT 1"); ResultSet resultSet = preparedStatement.executeQuery()) {
             if (resultSet.next()) {
                 return resultSet.getString(1);
@@ -36,8 +36,16 @@ public class JdbcCrawlerDao implements CrawlerDao {
         return null;
     }
 
-    public void updateDatabase(String link, String sql) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    public void insertProcessedLink(String link) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO links_already_processed(link) VALUES(?)")) {
+            preparedStatement.setString(1, link);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void insertToBeProcessedLink(String link) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO links_to_be_processed(link) VALUES(?)")) {
             preparedStatement.setString(1, link);
             preparedStatement.executeUpdate();
         }

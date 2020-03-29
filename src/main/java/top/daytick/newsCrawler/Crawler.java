@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Crawler {
-    private CrawlerDao newsDao = new JdbcCrawlerDao();
+//    private CrawlerDao newsDao = new JdbcCrawlerDao();
+    private CrawlerDao newsDao = new MybatisCrawlerDao();
 
     public static void main(String[] args) {
         try {
@@ -44,7 +45,7 @@ public class Crawler {
                 storeIntoDatabaseIfItIsNews(doc, link);
             }
 
-            newsDao.updateDatabase(link, "INSERT INTO links_already_processed(link) VALUES(?)");
+            newsDao.insertProcessedLink(link);
         }
     }
 
@@ -63,7 +64,7 @@ public class Crawler {
                 }
 
                 if (link.startsWith("http")) {
-                    newsDao.updateDatabase(link, "INSERT INTO links_to_be_processed(link) VALUES(?)");
+                    newsDao.insertToBeProcessedLink(link);
                 }
             }
         }
