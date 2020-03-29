@@ -10,6 +10,12 @@ public class News {
     private Instant createdAt;
     private Instant modifiedAt;
 
+    public News(String title, String content, String link) {
+        this.title = title;
+        this.content = content;
+        Link = link;
+    }
+
     public Long getId() {
         return id;
     }
