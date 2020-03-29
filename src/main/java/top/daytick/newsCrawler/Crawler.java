@@ -1,5 +1,6 @@
 package top.daytick.newsCrawler;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -23,6 +24,7 @@ public class Crawler {
     private static final Pattern PATTERN = Pattern.compile("https?://(news\\.)?sina\\.cn.*");
     private static final String USERAGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36";
 
+    @SuppressFBWarnings("DMI_CONSTANT_DB_PASSWORD")
     public static void main(String[] args) throws IOException, SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/news?characterEncoding=utf-8", "root", "root");
 
