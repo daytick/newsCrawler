@@ -17,35 +17,35 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Crawler {
-//    private CrawlerDao newsDao = new JdbcCrawlerDao();
-    private CrawlerDao newsDao = new MybatisCrawlerDao();
+public class Crawler extends Thread {
+    private CrawlerDao newsDao;
 
-    public static void main(String[] args) {
-        try {
-            new Crawler().run();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Crawler(CrawlerDao newsDao) {
+        this.newsDao = newsDao;
     }
 
-    public void run() throws SQLException, IOException {
-        String link;
-        while ((link = newsDao.getNextLinkThenDelete()) != null) {
-            if (newsDao.isLinkProcessed(link)) {
-                continue;
+    @Override
+    public void run() {
+        try {
+            String link;
+            while ((link = newsDao.getNextLinkThenDelete()) != null) {
+                if (newsDao.isLinkProcessed(link)) {
+                    continue;
+                }
+
+                System.out.println("link=" + link);
+                if (isNeededLink(link)) {
+                    Document doc = httpGetAndParseHtml(link);
+
+                    parseLinksFromPageAndStoreIntoDatabase(doc);
+
+                    storeIntoDatabaseIfItIsNews(doc, link);
+                }
+
+                newsDao.insertProcessedLink(link);
             }
-
-            System.out.println("link=" + link);
-            if (isNeededLink(link)) {
-                Document doc = httpGetAndParseHtml(link);
-
-                parseLinksFromPageAndStoreIntoDatabase(doc);
-
-                storeIntoDatabaseIfItIsNews(doc, link);
-            }
-
-            newsDao.insertProcessedLink(link);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
