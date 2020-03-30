@@ -25,7 +25,7 @@ public class MybatisCrawlerDao implements CrawlerDao {
     }
 
     @Override
-    public String getNextLinkThenDelete() throws SQLException {
+    public synchronized String getNextLinkThenDelete() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             String link = session.selectOne("top.daytick.myMapper.getNextLink");
             if (link != null) {
@@ -36,14 +36,14 @@ public class MybatisCrawlerDao implements CrawlerDao {
     }
 
     @Override
-    public void insertNewsIntoDatabase(String title, String content, String link) throws SQLException {
+    public void insertNewsIntoDatabase(String title, String content, String link) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             session.insert("top.daytick.myMapper.insertNews", new News(title, content, link));
         }
     }
 
     @Override
-    public boolean isLinkProcessed(String link) throws SQLException {
+    public boolean isLinkProcessed(String link) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             int count = session.selectOne("top.daytick.myMapper.countLink", link);
             return count != 0;
@@ -51,12 +51,12 @@ public class MybatisCrawlerDao implements CrawlerDao {
     }
 
     @Override
-    public void insertProcessedLink(String link) throws SQLException {
+    public void insertProcessedLink(String link) {
         insertLink(link, "links_already_processed");
     }
 
     @Override
-    public void insertToBeProcessedLink(String link) throws SQLException {
+    public void insertToBeProcessedLink(String link) {
         insertLink(link, "links_to_be_processed");
     }
 
