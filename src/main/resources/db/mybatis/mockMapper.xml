@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.daytick.mockMapper">
+
+    <select id="selectNews" resultType="top.daytick.newsCrawler.News">
+        SELECT id, title, content, link, created_at, modified_at
+        FROM news
+    </select>
+
+    <insert id="insertNews" parameterType="top.daytick.newsCrawler.News">
+        INSERT INTO news(title, content, link, created_at, modified_at)
+        VALUES (#{title}, #{content}, #{link}, #{createdAt}, #{modifiedAt})
+    </insert>
+
+</mapper>
