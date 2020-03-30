@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MockDataGenerator {
-    private static final int TARGET_LINK_COUNT = 5_0000;
+    private static final int TARGET_LINK_COUNT = 1_0000;
 
     public static void main(String[] args) {
         SqlSessionFactory sqlSessionFactory;
